@@ -1,38 +1,122 @@
-.App {
-  text-align: center;
+:root{
+  /* MISMAS medidas para sobre y carta */
+  --env-w: min(640px, 60vw);
+  --env-h: min(360px, 34vw);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Reset mínimo */
+*{ box-sizing:border-box; }
+html,body,#root{ height:100%; }
+body{
+  margin:0;
+  background:radial-gradient(1200px 800px at 50% 8%, #fffdf2 0%, #fdebb4 38%, #fdeab1 40%, #f7e29a 60%, #f4d87a 75%, #f1d372 100%);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  color:#353535;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* ---------- Marco de girasoles (SVG fijo) ---------- */
+.frame{ position:fixed; inset:0; z-index:1; width:100vw; height:100vh; pointer-events:none; }
+.sf{ filter:drop-shadow(0 10px 14px rgba(0,0,0,.22)); }
+
+/* ---------- Área segura centrada ---------- */
+.app{ position:relative; min-height:100%; }
+.safe{
+  position:fixed; inset:64px;   /* aire entre contenido y marco */
+  display:grid; place-items:center; z-index:2;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* ---------- Carta cerrada (SOBRE) ---------- */
+.envelope{
+  position:relative;
+  width:var(--env-w);
+  height:var(--env-h);
+  border-radius:18px;
+  filter: drop-shadow(0 18px 22px rgba(0,0,0,.20));
+}
+.env-body{
+  position:absolute; inset:0;
+  background:linear-gradient(180deg,#b59aff 0%, #8f69f6 100%);
+  border-radius:18px;
+}
+.env-flap{
+  position:absolute; inset:0;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,0)),
+    linear-gradient(180deg,#ccb9ff 0%, #b59aff 100%);
+  clip-path:polygon(0 0,100% 0,50% 55%);
+  transform-origin:50% 0%;
+  transition: transform .6s ease;
+  border-top-left-radius:18px; border-top-right-radius:18px;
+}
+.envelope.open .env-flap{ transform:rotateX(180deg); }
+
+/* Sello – NO tocar :) */
+.seal{
+  position:absolute; left:50%; top:54%;
+  transform:translate(-50%,-50%);
+  width:76px; height:76px; border:none; background:transparent; cursor:pointer;
+  display:grid; place-items:center; z-index:3;
+}
+.seal-wax{
+  position:relative;
+  width:100%; height:100%;
+  background: radial-gradient(circle at 30% 30%, #eadeff 10%, #b485ff 55%, #873bff 100%);
+  border-radius:55% 47% 52% 48% / 58% 44% 56% 42%;
+  box-shadow:0 8px 14px rgba(0,0,0,.28), inset 0 2px 4px rgba(255,255,255,.35);
+}
+.seal-wax::before,
+.seal-wax::after{
+  content:"";
+  position:absolute; background:inherit; border-radius:50%;
+  filter:blur(.2px);
+}
+.seal-wax::before{ width:18px; height:18px; left:-6px; bottom:8px; }
+.seal-wax::after { width:14px; height:14px; right:-5px; top:10px; }
+.seal-A{
+  position:absolute; font-size:40px; color:#fff; font-weight:600;
+  font-family: "Great Vibes", "Allura", cursive;
+  text-shadow: 0 2px 4px rgba(0,0,0,.25);
 }
 
-.App-link {
-  color: #61dafb;
+/* ---------- Carta abierta (MISMO TAMAÑO que el sobre) ---------- */
+.letter{
+  position:relative;
+  width:var(--env-w);
+  height:var(--env-h);                 /* misma altura que el sobre */
+  filter: drop-shadow(0 18px 24px rgba(0,0,0,.16));
+}
+.paper{
+  background:#fffefa; border-radius:16px; padding:24px 28px 40px;
+  border:6px solid #a78bfa;
+  height:100%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Solapa alineada al borde superior del papel */
+.flap-visual{
+  position:absolute; left:50%; top:1.5%;
+  transform:translate(-50%, -100%);
+  width:100%;
+  height:calc(var(--env-h) * 0.35);
+  clip-path:polygon(0 100%, 50% 0, 100% 100%);
+  background: linear-gradient(180deg,#ccb9ff,#b59aff);
+  filter: drop-shadow(0 10px 16px rgba(0,0,0,.18));
+  border-top-left-radius:18px; border-top-right-radius:18px;
 }
+
+/* Texto de la carta (más grande, sin deformar) */
+.msg{
+  margin:0;
+  text-align:center;
+  line-height:1.7;
+  font-size: clamp(18px, 1.9vw, 24px);
+}
+.heart{ color:#bdbdbd; }
+
+.ghost-link{
+  position:absolute; right:16px; bottom:12px; border:none; background:transparent;
+  color:#5b21b6; font-weight:700; text-decoration:underline; cursor:pointer;
+}
+
+/* ---------- Ramo ---------- */
+.bouquet{ width:min(760px, 72vw); }
+.bouquet-svg{ width:100%; height:auto; display:block; }
