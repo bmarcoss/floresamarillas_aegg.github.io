@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/floresamarillas_aegg.github.io/static/css/main.7ca3dcfa.css",
-    "main.js": "/floresamarillas_aegg.github.io/static/js/main.d33e6603.js",
+    "main.js": "/floresamarillas_aegg.github.io/static/js/main.20010686.js",
     "static/js/453.078722e5.chunk.js": "/floresamarillas_aegg.github.io/static/js/453.078722e5.chunk.js",
     "index.html": "/floresamarillas_aegg.github.io/index.html",
     "main.7ca3dcfa.css.map": "/floresamarillas_aegg.github.io/static/css/main.7ca3dcfa.css.map",
-    "main.d33e6603.js.map": "/floresamarillas_aegg.github.io/static/js/main.d33e6603.js.map",
+    "main.20010686.js.map": "/floresamarillas_aegg.github.io/static/js/main.20010686.js.map",
     "453.078722e5.chunk.js.map": "/floresamarillas_aegg.github.io/static/js/453.078722e5.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.7ca3dcfa.css",
-    "static/js/main.d33e6603.js"
+    "static/js/main.20010686.js"
   ]
 }
