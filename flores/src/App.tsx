@@ -337,7 +337,36 @@ export default function App() {
   const [stage, setStage] = useState<"closed" | "letter" | "bouquet">("closed");
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Pausa el audio si sales del ramo
+  // Autoplay en silencio al cargar + desmuteo en el primer gesto del usuario
+  useEffect(() => {
+    const a = audioRef.current;
+    if (!a) return;
+
+    // intenta iniciar en silencio (permitido en la mayoría de navegadores)
+    a.muted = true;
+    a.play().catch(() => { /* ignorado */ });
+
+    // en el primer gesto (click/tap/tecla), desmutea y asegura reproducción
+    const unmute = () => {
+      a.muted = false;
+      a.volume = 0.9;
+      a.play().catch(() => { /* ignorado */ });
+      window.removeEventListener("pointerdown", unmute);
+      window.removeEventListener("keydown", unmute);
+      window.removeEventListener("touchstart", unmute);
+    };
+    window.addEventListener("pointerdown", unmute, { once: true });
+    window.addEventListener("keydown", unmute, { once: true });
+    window.addEventListener("touchstart", unmute, { once: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", unmute);
+      window.removeEventListener("keydown", unmute);
+      window.removeEventListener("touchstart", unmute);
+    };
+  }, []);
+
+  // Pausa el audio si sales del ramo (conservado tal como tenías)
   useEffect(() => {
     if (stage !== "bouquet") audioRef.current?.pause();
   }, [stage]);
@@ -346,8 +375,16 @@ export default function App() {
     <div className="app">
       <SunflowerFrame />
 
-      {/* Audio oculto; cambia la ruta si usas otro nombre */}
-      <audio ref={audioRef} src="/cancion.mp3" preload="auto" loop />
+      {/* Audio oculto: usa PUBLIC_URL para GitHub Pages */}
+      <audio
+        ref={audioRef}
+        src={`${process.env.PUBLIC_URL}/cancion.mp3`}
+        preload="auto"
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
 
       <div className="safe">
         {stage === "closed" && <Envelope onOpen={() => setStage("letter")} />}
@@ -360,7 +397,7 @@ export default function App() {
               if (el) {
                 el.currentTime = 0;
                 el.play().catch(() => {
-                  /* si el navegador bloquea, el siguiente click permite reproducir */
+                  /* si el navegador bloquea, se desmuteará con el primer gesto */
                 });
               }
             }}
